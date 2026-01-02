@@ -1,0 +1,82 @@
+<?php 
+
+    require_once __DIR__ . '/../../controller/siswa.php';
+    require_once __DIR__ . '/../../layout/header.php';
+    require_once __DIR__ . '/../../layout/navigasi.php';
+
+    $result = tampilData();
+?>
+
+<div class="container py-4">
+
+<?php 
+    $status = $_GET['status'] ?? '';
+        if ($status == 'sukses') {
+            echo "<div class='alert alert-success'> Data berhasil disimpan!</div>";
+        } elseif ($status == 'gagal') {
+            echo"<div class='alert alert-danger'>Data gagal disimpan</div>";
+        } elseif ($status == 'update_sukses') {
+            echo"<div class='alert alert-success'>Data berhasil diubah</div>";
+        } elseif ($status == 'update_gagal') {
+            echo"<div class='alert alert-danger'>Data gagal diubah</div>";
+        } elseif ($status == 'hapus_sukses') {
+            echo"<div class='alert alert-success'>Data berhasil dihapus!</div>";
+        } elseif ($status == 'hapus_gagal') {
+            echo"<div class='alert alert-danger'>Data gagal dihapus</div>";
+        } 
+?>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+     <h3 class="m-0"><i class="fas fa-users me-2"></i>Data Siswa</h3>
+    <a href="tambah.php" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Tambah Data</a>
+</div>
+
+ <div class="card">
+        <div class="table-responsive">
+<table class="table table-hover mb-0">
+                <thead class="table-light">
+        <tr align="center">
+            <th style="width: 70px;">No.</th>
+            <th>Nama Siswa</th>
+            <th>Jenis Kelamin</th>
+            <th>Umur</th>
+            <th style="width: 180px">Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php 
+     $no = 1;
+     if(mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+    ?>
+
+    <tr align="center">
+        <td><?= $no; ?></td>
+        <td align="left"><?= $row['nama_siswa']; ?></td>
+        <td><?= $row['jenis_kelamin']; ?></td>
+        <td><?= $row['umur']; ?></td>
+        <td align="center">
+            <a href="edit.php?id=<?= $row['id_siswa']; ?>" class="btn btn-sm btn-warning">Edit</a>
+               <a href="hapus.php?id=<?= $row['id_siswa']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin Hapus?')">
+                    Delete
+                </a>
+        </td>
+    </tr>
+
+        <?php 
+         $no++;
+     }
+    } else {
+        ?>
+
+        <tr>
+            <td colspan="5" ailgn="center">Data Siswa tidak tersedia</td>
+        </tr>
+        <?php 
+    }
+        ?>
+    </tbody>
+</table>
+</div>
+<?php require_once __DIR__ . '/../../layout/footer.php'; ?>
